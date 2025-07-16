@@ -12,13 +12,29 @@ import Footer from './components/Footer'
 import AdminPanel from './components/admin/AdminPanel'
 
 function App() {
-  const [currentView, setCurrentView] = useState('main')
+  const [currentView, setCurrentView] = useState('home')
 
   useEffect(() => {
-    // Check URL path to determine if we should show admin panel
+    // Check URL path to determine current view
     const path = window.location.pathname
     if (path === '/admin' || path.startsWith('/admin/')) {
       setCurrentView('admin')
+    } else if (path === '/courses') {
+      setCurrentView('courses')
+    } else if (path === '/faculty') {
+      setCurrentView('faculty')
+    } else if (path === '/study-materials') {
+      setCurrentView('study-materials')
+    } else if (path === '/current-affairs') {
+      setCurrentView('current-affairs')
+    } else if (path === '/results') {
+      setCurrentView('results')
+    } else if (path === '/about') {
+      setCurrentView('about')
+    } else if (path === '/contact') {
+      setCurrentView('contact')
+    } else {
+      setCurrentView('home')
     }
 
     // Listen for popstate events (back/forward navigation)
@@ -26,8 +42,22 @@ function App() {
       const path = window.location.pathname
       if (path === '/admin' || path.startsWith('/admin/')) {
         setCurrentView('admin')
+      } else if (path === '/courses') {
+        setCurrentView('courses')
+      } else if (path === '/faculty') {
+        setCurrentView('faculty')
+      } else if (path === '/study-materials') {
+        setCurrentView('study-materials')
+      } else if (path === '/current-affairs') {
+        setCurrentView('current-affairs')
+      } else if (path === '/results') {
+        setCurrentView('results')
+      } else if (path === '/about') {
+        setCurrentView('about')
+      } else if (path === '/contact') {
+        setCurrentView('contact')
       } else {
-        setCurrentView('main')
+        setCurrentView('home')
       }
     }
 
@@ -35,34 +65,54 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
-  // Function to navigate to admin panel
-  const navigateToAdmin = () => {
-    window.history.pushState({}, '', '/admin')
-    setCurrentView('admin')
-  }
-
-  // Function to navigate back to main site
-  const navigateToMain = () => {
-    window.history.pushState({}, '', '/')
-    setCurrentView('main')
+  // Function to navigate to different pages
+  const navigateTo = (page: string) => {
+    const url = page === 'home' ? '/' : `/${page}`
+    window.history.pushState({}, '', url)
+    setCurrentView(page)
   }
 
   if (currentView === 'admin') {
     return <AdminPanel />
   }
 
+  const renderContent = () => {
+    switch (currentView) {
+      case 'courses':
+        return <Courses />
+      case 'faculty':
+        return <Faculty />
+      case 'study-materials':
+        return <StudyMaterials />
+      case 'current-affairs':
+        return <CurrentAffairs />
+      case 'results':
+        return <Results />
+      case 'about':
+        return <About />
+      case 'contact':
+        return <Contact />
+      default:
+        return (
+          <>
+            <Hero />
+            <Courses />
+            <Faculty />
+            <StudyMaterials />
+            <CurrentAffairs />
+            <Results />
+            <About />
+            <Contact />
+          </>
+        )
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white">
-      <Header onAdminClick={navigateToAdmin} />
+      <Header onAdminClick={() => navigateTo('admin')} onNavigate={navigateTo} />
       <main>
-        <Hero />
-        <Courses />
-        <Faculty />
-        <StudyMaterials />
-        <CurrentAffairs />
-        <Results />
-        <About />
-        <Contact />
+        {renderContent()}
       </main>
       <Footer />
     </div>

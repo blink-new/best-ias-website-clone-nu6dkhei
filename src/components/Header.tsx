@@ -5,20 +5,21 @@ import { Menu, Phone, Mail, MapPin, Shield } from 'lucide-react'
 
 interface HeaderProps {
   onAdminClick?: () => void
+  onNavigate?: (page: string) => void
 }
 
-const Header = ({ onAdminClick }: HeaderProps) => {
+const Header = ({ onAdminClick, onNavigate }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'Courses', href: '#courses' },
-    { name: 'Faculty', href: '#faculty' },
-    { name: 'Study Materials', href: '#materials' },
-    { name: 'Current Affairs', href: '#current-affairs' },
-    { name: 'Results', href: '#results' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', page: 'home' },
+    { name: 'Courses', page: 'courses' },
+    { name: 'Faculty', page: 'faculty' },
+    { name: 'Study Materials', page: 'study-materials' },
+    { name: 'Current Affairs', page: 'current-affairs' },
+    { name: 'Results', page: 'results' },
+    { name: 'About', page: 'about' },
+    { name: 'Contact', page: 'contact' }
   ]
 
   return (
@@ -61,13 +62,13 @@ const Header = ({ onAdminClick }: HeaderProps) => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
               {navItems.map((item) => (
-                <a
+                <button
                   key={item.name}
-                  href={item.href}
+                  onClick={() => onNavigate?.(item.page)}
                   className="text-gray-700 hover:text-primary transition-colors duration-200 font-medium"
                 >
                   {item.name}
-                </a>
+                </button>
               ))}
             </nav>
 
@@ -102,14 +103,16 @@ const Header = ({ onAdminClick }: HeaderProps) => {
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col space-y-4 mt-8">
                   {navItems.map((item) => (
-                    <a
+                    <button
                       key={item.name}
-                      href={item.href}
-                      className="text-lg font-medium text-gray-700 hover:text-primary transition-colors"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        onNavigate?.(item.page)
+                        setIsOpen(false)
+                      }}
+                      className="text-lg font-medium text-gray-700 hover:text-primary transition-colors text-left"
                     >
                       {item.name}
-                    </a>
+                    </button>
                   ))}
                   <div className="flex flex-col space-y-2 pt-4 border-t">
                     <Button variant="outline" size="sm">
